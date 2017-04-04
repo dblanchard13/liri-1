@@ -4,7 +4,7 @@
 // 
 //             Name:  liri.js
 //      Description:  emulates a very low functionality, command-line version
-// 				   of Siri
+// 				      of Siri
 //           Author:  Jake Stenger <myselfjake@gmail.com>
 //          Created:  2017-04-04
 //          Version:  1.0
@@ -20,10 +20,10 @@
 
 var fs = require('fs');
 var requests = require('request');
-var twitter = require('twitter');
+var Twitter = require('twitter');
 var spotify = require('spotify');
-var command = "";
-
+var tw_Config = require('./keys.js'); //gets keys from separate file as object
+var log = "./log.txt"; //log file path
 
 ///////////////////////////////////////////////////////////////////////
 // Function Definitions
@@ -32,7 +32,13 @@ var command = "";
 function getTweets() {
 	// This function prints my last 20 tweets and their creation dates. I 
 	// think I've tweeted 4 things in my life, even though I work at Twitter.
-	// So, this function will print my last 4 tweets, unless I make some more. 
+	// So, this function will print my last 4 tweets, unless I make some more.
+	var client = new Twitter(tw_Config.twitterKeys);
+	client.get('favorites/list', function(error, tweets, response) {
+		if(error) throw error;
+		console.log(tweets);  // The favorites. 
+		console.log(response);  // Raw response object. 
+	});
 }
 
 function getSong(name) {
@@ -77,18 +83,22 @@ function getMode(cmd, arg) {
 	// called from chooseRandom().
 
 	if (cmd === undefined){
-		var cmd = process.argv[2];
-		"my-tweets";
-		"spotify-this-song";
-		"movie-this";
-		"do-what-it-says";
-	} else {
-
+		cmd = process.argv[2];
+		arg = process.
 	}
+}
+
+function sendHelp() {
+	// I figure this application should help its users by printing its own man
+	// page whenever the user passes nonsense into it, which I have to assume
+	// will be about 80% of the time. This function just prints out the contents
+	// of man.txt to screen. If you don't like what it prints, go complain to
+	// that file. This function is content agnostic.
 }
 
 ///////////////////////////////////////////////////////////////////////
 // Let's get this party started!
 ///////////////////////////////////////////////////////////////////////
 
-getMod	// 		1. 
+// getMod();
+getTweets();
