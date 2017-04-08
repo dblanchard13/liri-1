@@ -1,0 +1,40 @@
+LIRI(1)                         User Commands                        LIRI(1)
+NAME
+
+       liri.js - look some stuff up using APIs
+
+SYNOPSIS
+
+       liri [function] [-a]...[-a]
+
+DESCRIPTION
+
+       The command liri has a couple of functions that you can call.
+
+       You can optionally include a search term after the function name. For
+       some functions, this might actually do something. For others, your
+       effort will be wasted. It is up to you to determine which function is
+       which. Good luck.
+
+FUNCTIONS
+
+       tweet-this               Display the author's 20 most recent tweets.
+
+       spotify-this-song	Perform a spotify lookup on the specified song
+
+       movie-this	        Perform an OMDb lookup on the specificed movie
+
+       do-what-it-says		A surprise!
+
+SEE ALSO
+	siri(1)
+
+AUTHORS
+
+       Jake Stenger <myselfjake@gmail.com>
+
+AVAILABILITY
+
+       The liri.js app is on github, here: https://github.com/jakestenger/liri
+
+

@@ -10,7 +10,7 @@
 //          Version:  1.0
 //    Last modified:  n/a
 // Last modified by:  n/a
-//   New in version:  n/a
+//   New in version:  BRAND NEW! Full of bugs?
 // 
 ///////
 
@@ -24,7 +24,10 @@ var Twitter = require('twitter');
 var spotify = require('spotify');
 var tw_Config = require('./keys.js'); //gets keys from separate file as object
 var inputString = process.argv;
-var log = "./log.txt"; //log file path
+var cyan = '\x1b[36m%s\x1b[0m';
+var white = '\x1b[37m%s\x1b[0m';
+var yellow = '\x1b[33m%s\x1b[0m';
+var red = '\x1b[31m%s\x1b[0m';
 
 ///////////////////////////////////////////////////////////////////////
 // Function Definitions
@@ -35,13 +38,15 @@ function getTweets() {
 	// think I've tweeted 4 things in my life, even though I work at Twitter.
 	// So, this function will print my last 4 tweets, unless I make some more.
 	var client = new Twitter(tw_Config.twitterKeys);
-	client.get('statuses/user_timeline', {q: 'muddsbeets', count: 20}, function(error, tweets, response) {
+	client.get('statuses/user_timeline', {screen_name: 'muddsbeets', count: 20}, function(error, tweets, response) {
 		if (error) {
-			console.log('[ERROR] Twitter is the worst!');
+			console.log(red, '[ERROR] Twitter is the worst!');
 		} else {
+			console.log('');
 			for (var i = 0; i < tweets.length; i++) {
-				console.log('\n######  Tweet Number ' + (i+1) + '  ######');
-				console.log('#    ' + tweets[i].text);
+				console.log(cyan, '######  Tweet Number ' + (i+1) + '  ######');
+				console.log(white, tweets[i].text);
+				console.log('');
 			};
 		}
 	});
@@ -56,22 +61,22 @@ function getMovie(name) {
 	var url = 'http://www.omdbapi.com/?t='+ encodeURI(name) +'&plot=short&&tomatoes=true&r=json';
 	request(url, function (error, response, body) {
 		if (response.statusCode == 200) {
-			console.log('\n###### MOVIE INFO #########################');
-			console.log('Movie Title: ' + JSON.parse(body)['Title']);
-			console.log('Movie Year: ' + JSON.parse(body)['Year']);
-			console.log('IMDB Rating: ' + JSON.parse(body)['imdbRating']);
-			console.log('Country: ' + JSON.parse(body)['Country']);
-			console.log('Language: ' + JSON.parse(body)['Language']);
-			console.log('Plot: ' + JSON.parse(body)['Plot']);
-			console.log('Actors: ' + JSON.parse(body)['Actors']);
-			console.log('Rotten Tomatoes Rating: ' + JSON.parse(body)['tomatoRating']);
-			console.log('Rotten Tomatoes URL: ' + JSON.parse(body)['tomatoURL']);
+			console.log(cyan, '\n###### MOVIE INFO #########################');
+			console.log(white, '  Movie Title: ' + JSON.parse(body)['Title']);
+			console.log(white, '  Movie Year: ' + JSON.parse(body)['Year']);
+			console.log(white, '  IMDB Rating: ' + JSON.parse(body)['imdbRating']);
+			console.log(white, '  Country: ' + JSON.parse(body)['Country']);
+			console.log(white, '  Language: ' + JSON.parse(body)['Language']);
+			console.log(white, '  Plot: ' + JSON.parse(body)['Plot']);
+			console.log(white, '  Actors: ' + JSON.parse(body)['Actors']);
+			console.log(white, '  Rotten Tomatoes Rating: ' + JSON.parse(body)['tomatoRating']);
+			console.log(white, '  Rotten Tomatoes URL: ' + JSON.parse(body)['tomatoURL']);
 			console.log('');
 		} else if (error){
-			console.log('[ERROR] OMDb API returned an error...');
+			console.log(red, '[ERROR] OMDb API returned an error...');
 			console.log(error)
 		} else {
-			console.log('[ERROR] Unknown Error');
+			console.log(red, '[ERROR] Unknown Error');
 		}
 	})
 }
@@ -89,7 +94,7 @@ function getSong(name) {
 	name = name || "Ace of Base The Sign";
 	spotify.search({type: 'track', query: name}, function(error, data) {
 	    if (error) {
-			console.log('[ERROR] Spotify returned an error');
+			console.log(red, '[ERROR] Spotify returned an error');
 			console.log(error);
 	    } else {
 			var artist = data.tracks.items[0].artists[0].name;
@@ -103,11 +108,11 @@ function getSong(name) {
         	};
 
 			// Print results
-			console.log('\n###### SONG INFO #########################')
-			console.log('  Artist: ' + artist);
-			console.log('  Song: ' + songName);
-			console.log('  Album: ' + albumName);
-			console.log('  URL: ' + printURL() + '\n');
+			console.log(cyan, '\n###### SONG INFO #########################')
+			console.log(white, '  Artist: ' + artist);
+			console.log(white, '  Song: ' + songName);
+			console.log(white, '  Album: ' + albumName);
+			console.log(white, '  URL: ' + printURL() + '\n');
 		}
 	});
 }
@@ -120,7 +125,7 @@ function chooseRandom() {
 
 	fs.readFile('./random.txt', 'utf8', function read(error, data) {
 		if (error) {
-			console.log('[ERROR] Your computer is broken');
+			console.log(red, '[ERROR] Your computer is broken');
 			console.log(error);
 		} else {
 			var cmds = data.split(',');
@@ -169,6 +174,14 @@ function sendHelp() {
 	// will be about 80% of the time. This function just prints out the contents
 	// of man.txt to screen. If you don't like what it prints, go complain to
 	// that file. This function is content agnostic.
+	fs.readFile('./man.txt', 'utf8', function read(error, data) {
+		if (error) {
+			console.log(red, '[ERROR] Your computer is broken');
+			console.log(error);
+		} else {
+			console.log(white, data);
+		}
+	});
 }
 
 ///////////////////////////////////////////////////////////////////////
