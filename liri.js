@@ -34,10 +34,8 @@ function getTweets() {
 	// think I've tweeted 4 things in my life, even though I work at Twitter.
 	// So, this function will print my last 4 tweets, unless I make some more.
 	var client = new Twitter(tw_Config.twitterKeys);
-	client.get('favorites/list', function(error, tweets, response) {
-		if(error) throw error;
-		console.log(tweets);  // The favorites. 
-		console.log(response);  // Raw response object. 
+	client.get('statuses/user_timeline', {q: 'muddsbeets'}, function(error, tweets, response) {
+		console.log(tweets);
 	});
 }
 
@@ -82,9 +80,9 @@ function getMode(cmd, arg) {
 	// It takes an optional argument, cmd, which will only have a value if
 	// called from chooseRandom().
 
-	if (cmd === undefined){
+	if (cmd === undefined) {
 		cmd = process.argv[2];
-		arg = process.
+		arg = process.argv[3];
 	}
 }
 
