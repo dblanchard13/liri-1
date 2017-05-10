@@ -57,10 +57,13 @@ function getMovie(name) {
 	// prints that information to a screen. If no movie is passed, this 
 	// function assumes "Mr. Nobody".
 
+	// nice way to provide a default!
 	name = name || "Mr. Nobody";
 	var url = 'http://www.omdbapi.com/?t='+ encodeURI(name) +'&plot=short&&tomatoes=true&r=json';
 	request(url, function (error, response, body) {
-		if (response.statusCode == 200) {
+		// you should try to stick with strict equality checking in javascript to avoid bugs caused by people who don't understand what type coercion checking `==` is actually doing
+		if (response.statusCode === 200) {
+			// not a huge deal, but you could optimize this a bit by setting `body = JSON.parse(body)` so you can avoid parsing it everytime you want to access a property
 			console.log(cyan, '\n###### MOVIE INFO #########################');
 			console.log(white, '  Movie Title: ' + JSON.parse(body)['Title']);
 			console.log(white, '  Movie Year: ' + JSON.parse(body)['Year']);
@@ -97,10 +100,17 @@ function getSong(name) {
 			console.log(red, '[ERROR] Spotify returned an error');
 			console.log(error);
 	    } else {
+
+	    // another really minor thing, but it might be nice to do something like `var track = data.tracks.items[0]`
+	    // That way you don't have to keep typing `data.tracks.items[0]` and you also have a more descriptive variable
+	    // name to access data from
+
 			var artist = data.tracks.items[0].artists[0].name;
 			var songName = data.tracks.items[0].name;
 			var albumName = data.tracks.items[0].album.name;
 			var songURL = data.tracks.items[0].album.external_urls;
+			// Is there ever a case where songURL won't just be `{ spotify: 'URL_GOES_HERE' }` ?
+			// If not, this printURL function's probably overkill..
 			var printURL = function() {
         		for (url in songURL) {
           			return songURL[url];
@@ -140,10 +150,14 @@ function getMode(cmd, args) {
 	// It takes an optional argument, cmd, which will only have a value if
 	// called from chooseRandom().
 
+	// Make sure to declare variables within functions so they don't leak onto the global scope.
+	// Or you could also just have this be a default for `cmd` --> `cmd = cmd || process.argv[2]`
 	func = cmd || process.argv[2];
 	
 	if (args === undefined) {
 		args = [];
+		// Nice job accounting for all the arguments after the command.
+		// You can also simplify this into a one-liner --> `args = process.argv.slice(3).join(' ')`
 		for (var i = 3; i < process.argv.length; i++) {
 			args.push(process.argv[i]);
 		}
@@ -168,6 +182,7 @@ function getMode(cmd, args) {
 	};
 }
 
+// Loved this function 🙌
 function sendHelp() {
 	// I figure this application should help its users by printing its own man
 	// page whenever the user passes nonsense into it, which I have to assume
